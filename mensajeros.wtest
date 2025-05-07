@@ -1,0 +1,76 @@
+import mensajeros.*
+import empresa.*
+describe "test de primera parte" {
+
+  test "roberto puede llevar un paquete en camion con un acoplado" {
+    paquete.destino(puenteDeBrooklyn)
+    assert.that(paquete.puedeSerEntregado(roberto))
+  }
+  test "neo con credito no puede llevar un paquete que no esta pago a la matrix" {
+    paquete.destino(laMatrix)
+    paquete.noEstaPago()
+    neo.hablar()
+    assert.notThat(paquete.puedeSerEntregado(neo))
+  }
+}
+
+describe "test de segunda parte" {
+  test "contratar a un mensajero" {
+    empresaDeMensajeria.contratarMensajero(chuckNorris)
+    assert.that(empresaDeMensajeria.mensajeros().contains(chuckNorris))
+  }
+
+  test "despedir a un mensajero" {
+    empresaDeMensajeria.despedirMensajero(chuckNorris)
+    assert.notThat(empresaDeMensajeria.mensajeros().contains(chuckNorris))
+  }
+  test "despedir a todos los mensajeros" {
+    empresaDeMensajeria.despedirATodosLosMensajeros()
+    assert.that(empresaDeMensajeria.mensajeros().isEmpty())
+  }
+  test "la mensajeria es grande" {
+    empresaDeMensajeria.contratarMensajero(chuckNorris)
+    empresaDeMensajeria.contratarMensajero(neo)
+    empresaDeMensajeria.contratarMensajero(roberto)
+    assert.that(empresaDeMensajeria.esGrande())
+  }
+  test "el paquete puede entregarse por el primer empleado" {
+    empresaDeMensajeria.contratarMensajero(roberto)
+    assert.that(empresaDeMensajeria.puedeEntregarElPrimerMensajero())
+  }
+  test "el peso del ultimo mensajero" {
+    empresaDeMensajeria.contratarMensajero(neo)
+    empresaDeMensajeria.contratarMensajero(roberto)
+    assert.equals(95, empresaDeMensajeria.pesoDelUltimoMensajero())
+  }
+}
+
+describe "test tercera parte" {
+  test"facturacion con paquete sin pagar" {
+    empresaDeMensajeria.enviar(paquete)
+    empresaDeMensajeria.enviar(paquetito)
+    empresaDeMensajeria.enviar(paquetonViajero)
+    assert.equals(50, empresaDeMensajeria.facturacion())
+  }
+  test"facturacion con paqueton pagado" {
+    empresaDeMensajeria.enviar(paquete)
+    empresaDeMensajeria.enviar(paquetito)
+    paquetonViajero.pagar(200)
+    empresaDeMensajeria.enviar(paquetonViajero)
+    assert.equals(250, empresaDeMensajeria.facturacion())
+  }
+  test "mensajeria con sobrepeso" {
+    camion.agregarAcoplado()
+    roberto.viajaEn(camion)
+    empresaDeMensajeria.contratarMensajero(roberto)
+    empresaDeMensajeria.contratarMensajero(neo)
+    empresaDeMensajeria.pesoTotal()
+    assert.that(empresaDeMensajeria.tieneSobrepeso())
+  }
+  test "mensajeria envia un paquete" {
+    empresaDeMensajeria.contratarMensajero(jackSparrow)
+    empresaDeMensajeria.enviar(mensajeEnBotella)
+    assert.that(empresaDeMensajeria.enviados().contains(mensajeEnBotella))
+  }
+  
+}
